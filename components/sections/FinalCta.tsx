@@ -3,7 +3,7 @@ import { Reveal } from '@/components/motion/Reveal';
 
 export function FinalCta() {
   return (
-    <section className="section final on-dark" aria-labelledby="final-title" data-flow>
+    <section className="section final on-dark" aria-labelledby="final-title">
       <div className="container" data-flow-inner>
         <Reveal className="copy">
           <h2 id="final-title" className="t-h2">

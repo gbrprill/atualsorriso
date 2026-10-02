@@ -34,8 +34,11 @@ export default function Page() {
           <Testimonials />
           <Faq />
           <Location />
-          <FinalCta />
-          <Footer />
+          {/* Última seção: convite final + rodapé juntos, ocupando a tela inteira. */}
+          <div className="final-wrap" data-flow>
+            <FinalCta />
+            <Footer />
+          </div>
         </div>
       </main>
       <MobileBar />
