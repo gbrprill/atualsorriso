@@ -13,7 +13,7 @@ import { Location } from '@/components/sections/Location';
 import { FinalCta } from '@/components/sections/FinalCta';
 import { Footer } from '@/components/sections/Footer';
 import { MobileBar } from '@/components/sections/MobileBar';
-import { MotionRoot } from '@/components/motion/MotionRoot';
+import { SmoothScroll } from '@/components/motion/SmoothScroll';
 
 export default function Page() {
   return (
@@ -21,25 +21,25 @@ export default function Page() {
       <a className="skip" href="#conteudo">
         Pular para o conteúdo
       </a>
-      <MotionRoot />
       <Header />
       <main id="conteudo">
         <HeroStage />
         <div className="cover">
-        <Trust />
-        <Services />
-        <Results />
-        <Team />
-        <Clinic />
-        <FirstConversation />
-        <Testimonials />
-        <Faq />
-        <Location />
-        <FinalCta />
-        <Footer />
+          <Trust />
+          <Services />
+          <Results />
+          <Team />
+          <Clinic />
+          <FirstConversation />
+          <Testimonials />
+          <Faq />
+          <Location />
+          <FinalCta />
+          <Footer />
         </div>
       </main>
       <MobileBar />
+      <SmoothScroll />
     </AppProvider>
   );
 }

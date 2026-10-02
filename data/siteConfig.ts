@@ -11,6 +11,8 @@ export const siteConfig = {
   links: {
     instagram: 'https://www.instagram.com/atualsorrisofb/',
     maps: 'https://maps.app.goo.gl/sYaUAgJfsNpKLX7q6',
+    /** Avaliações ficam no perfil do Maps. Trocar pelo link direto das avaliações se a clínica fornecer. */
+    reviews: 'https://maps.app.goo.gl/sYaUAgJfsNpKLX7q6',
   },
   address: {
     value: 'Av. Julio Assis Cavalheiro, 318, Centro, Francisco Beltrão–PR, 85601-000',
@@ -23,10 +25,11 @@ export const siteConfig = {
   google: {
     rating: '4,9',
     reviews: 119,
-    snapshot: 'Snapshot da pesquisa pública de 30/09/2026',
+    /** Nota interna (modo revisão): não exibir como texto ao visitante. */
+    snapshot: 'Snapshot da pesquisa pública de 30/09/2026. Revalidar antes de publicar; não é atualizado automaticamente.',
     needsRevalidation: true,
   },
-  trajectory: { value: '15 anos', snapshot: 'Bio do Instagram, 2026', needsRevalidation: true },
+  trajectory: { value: '15 anos', snapshot: 'Fonte: bio do Instagram, observada em 30/09/2026. Revalidar.', needsRevalidation: true },
   responsibleTechnician: 'Dra. Daiane Inácio · CRO-PR 21050 (observado no perfil)',
   institutionalText: '[TEXTO INSTITUCIONAL APROVADO]',
   legal: {

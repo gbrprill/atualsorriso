@@ -1,7 +1,5 @@
-/** Física de botão (Motion): sobe um pouco no hover/foco e afunda no toque. Cor e sombra ficam no CSS. */
+/** Retorno de toque discreto (Motion). Cor, sombra e seta ficam no CSS; sem mola nem elevação em botões. */
 export const pressable = {
-  whileHover: { y: -2 },
-  whileFocus: { y: -2 },
-  whileTap: { y: 0, scale: 0.97 },
-  transition: { type: 'spring', stiffness: 480, damping: 30, mass: 0.7 },
+  whileTap: { scale: 0.98 },
+  transition: { duration: 0.15, ease: 'easeOut' },
 } as const;

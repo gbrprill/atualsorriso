@@ -1,7 +1,9 @@
 import type { TeamMember } from './types';
 
+const mockPos: Record<string, string> = { '01': '50% 20%', '02': '74% 22%', '03': '84% 22%', '04': '50% 18%', '05': '45% 20%' };
 const portrait = (n: string): TeamMember['portrait'] => ({
   id: `TEAM-${n}`,
+  mockup: { src: `/mockups/team-${n}.jpg`, position: mockPos[n] },
   src: null,
   placeholderLabel: `[RETRATO — TEAM-${n}]`,
   alt: '',
@@ -14,7 +16,8 @@ export const teamPhoto: TeamMember['portrait'] = {
   src: null,
   placeholderLabel: '[FOTO COLETIVA DA EQUIPE]',
   alt: '',
-  aspectRatio: '16/10',
+  aspectRatio: '21/9',
+  mockup: { src: '/mockups/team-group.jpg', position: '50% 30%' },
   editorialState: 'placeholder',
 };
 

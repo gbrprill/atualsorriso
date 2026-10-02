@@ -1,20 +1,18 @@
-'use client';
-
-import { useState } from 'react';
-import { motion } from 'motion/react';
 import { siteConfig } from '@/data/siteConfig';
-import { MediaPlaceholder } from '@/components/ui/Placeholder';
-import { MapsLink } from '@/components/ui/ActionButtons';
+import { MapsLink, directionsUrl } from '@/components/ui/ActionButtons';
 import { Reveal } from '@/components/motion/Reveal';
-import { pressable } from '@/components/ui/pressable';
+import { ReviewNote } from '@/components/ui/ReviewNote';
 
+/**
+ * Mapa incorporado (carregamento lazy). Um link transparente cobre o mapa: clicar em qualquer ponto
+ * abre a rota até a clínica no Google Maps (o iframe em si não recebe cliques).
+ */
 export function Location() {
-  const [map, setMap] = useState(false);
-  const embed = `https://www.google.com/maps?q=${encodeURIComponent(siteConfig.address.value)}&output=embed`;
+  const embed = `https://www.google.com/maps?q=${encodeURIComponent(siteConfig.address.value)}&z=16&output=embed`;
   return (
-    <section id="como-chegar" className="section" aria-labelledby="loc-title">
-      <div className="container split">
-        <Reveal kind="left" duration={0.9} className="copy">
+    <section id="como-chegar" className="section" aria-labelledby="loc-title" data-flow>
+      <div className="container split" data-flow-inner>
+        <Reveal kind="left" className="copy">
           <p className="eyebrow">Localização</p>
           <h2 id="loc-title" className="t-h2">
             Como chegar à Atual Sorriso.
@@ -28,31 +26,24 @@ export function Location() {
               <dt>Horário</dt>
               <dd>{siteConfig.hours.value}</dd>
               <p className="t-small" style={{ marginTop: 4 }}>
-                Horário observado na pesquisa pública de 30/09/2026. Confirme com a equipe.
+                Confirme os horários com a equipe.
+                <ReviewNote>Horário observado na pesquisa pública de 30/09/2026. Revalidar.</ReviewNote>
               </p>
             </div>
           </dl>
           <div className="btn-row">
-            <MapsLink position="location" variant="primary">
-              Como chegar
+            <MapsLink position="location" variant="primary" href={directionsUrl}>
+              Traçar rota
             </MapsLink>
-            {!map && (
-              <motion.button {...pressable} type="button" className="btn btn--secondary" onClick={() => setMap(true)}>
-                Ver mapa aqui
-              </motion.button>
-            )}
           </div>
         </Reveal>
-        <Reveal kind="right" duration={1} delay={0.1}>
-          {map ? (
-            <iframe className="map-frame" title="Mapa da Atual Sorriso" src={embed} loading="lazy" referrerPolicy="no-referrer-when-downgrade" />
-          ) : (
-            <MediaPlaceholder
-              large
-              slot={{ id: 'FACHADA-01', src: null, placeholderLabel: '[FACHADA DA CLÍNICA]', alt: '', aspectRatio: '16/10', editorialState: 'placeholder' }}
-              purpose="[FACHADA DA CLÍNICA]"
-            />
-          )}
+        <Reveal kind="media" delay={0.06} className="map">
+          <iframe className="map__frame" title="Mapa com a localização da Atual Sorriso" src={embed} loading="lazy" referrerPolicy="no-referrer-when-downgrade" tabIndex={-1} />
+          <a className="map__link" href={directionsUrl} target="_blank" rel="noopener noreferrer" aria-label="Abrir a rota até a Atual Sorriso no Google Maps (nova aba)">
+            <span className="map__hint" aria-hidden="true">
+              Abrir rota no Google Maps
+            </span>
+          </a>
         </Reveal>
       </div>
     </section>

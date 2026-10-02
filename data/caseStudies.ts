@@ -23,8 +23,9 @@ export const caseStudies: CaseStudy[] = services.map((s) => ({
       src: null,
       placeholderLabel: `[IMAGEM DO RESULTADO — ${s.name.toUpperCase()}]`,
       alt: '',
-      aspectRatio: '4/5',
+      aspectRatio: '4/3',
       sourceUrl: candidates[s.id]?.[0],
+      mockup: { src: `/mockups/result-${s.id.toLowerCase()}.jpg` },
       editorialState: 'placeholder',
     },
   ],
@@ -34,3 +35,9 @@ export const caseStudies: CaseStudy[] = services.map((s) => ({
   sourceUrls: candidates[s.id] ?? [],
   editorialState: 'placeholder',
 }));
+
+/**
+ * Caso real publicado = editorialState 'approved'. Todo o resto é espaço reservado.
+ * A interface nunca chama um espaço reservado de "caso".
+ */
+export const isPublishedCase = (c: CaseStudy) => c.editorialState === 'approved';

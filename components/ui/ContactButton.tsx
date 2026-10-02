@@ -7,7 +7,7 @@ import { useApp } from '@/components/AppProvider';
 import { IconChat } from './Icons';
 import { pressable } from './pressable';
 
-/** Contorno que se desenha em volta do botão no hover. Mede o botão para o traço seguir a borda. */
+/** Contorno que se desenha por dentro do botão no hover (e recolhe ao sair). Mede o botão para seguir a borda real. */
 function Trace({ target }: { target: RefObject<HTMLElement | null> }) {
   const [box, setBox] = useState({ w: 0, h: 0 });
   useEffect(() => {
@@ -21,8 +21,8 @@ function Trace({ target }: { target: RefObject<HTMLElement | null> }) {
   }, [target]);
   if (!box.w) return null;
   return (
-    <svg className="trace" viewBox={`0 0 ${box.w + 2} ${box.h + 2}`} aria-hidden="true" focusable="false">
-      <rect x="1" y="1" width={box.w} height={box.h} rx="8" pathLength={100} />
+    <svg className="trace" viewBox={`0 0 ${box.w} ${box.h}`} aria-hidden="true" focusable="false">
+      <rect x="2.5" y="2.5" width={box.w - 5} height={box.h - 5} rx="6" pathLength={100} />
     </svg>
   );
 }
@@ -33,14 +33,20 @@ export function ContactButton({
   position,
   variant = 'primary',
   icon = true,
+  trace = false,
   className = '',
+  onBeforeOpen,
 }: {
   children?: ReactNode;
   serviceId?: ServiceId;
   position: string;
-  variant?: 'primary' | 'secondary' | 'ghost' | 'light' | 'trace';
+  variant?: 'primary' | 'secondary' | 'light';
   icon?: boolean;
+  /** Contorno animado no hover (usado na hero). */
+  trace?: boolean;
   className?: string;
+  /** Executado antes de abrir o contato (ex.: fechar a modal do caso). */
+  onBeforeOpen?: () => void;
 }) {
   const { openContact } = useApp();
   const ref = useRef<HTMLButtonElement>(null);
@@ -49,20 +55,15 @@ export function ContactButton({
       ref={ref}
       {...pressable}
       type="button"
-      className={`btn btn--${variant} ${className}`}
-      onClick={() => openContact(serviceId, position)}
+      className={`btn btn--${variant}${trace ? ' btn--traced' : ''} ${className}`}
+      onClick={() => {
+        onBeforeOpen?.();
+        openContact(serviceId, position);
+      }}
     >
-      {variant === 'trace' ? (
-        <>
-          <Trace target={ref} />
-          <span>{children}</span>
-        </>
-      ) : (
-        <>
-          {icon && <IconChat className="ico-chat" />}
-          {children}
-        </>
-      )}
+      {trace && <Trace target={ref} />}
+      {icon && <IconChat className="ico-chat" />}
+      <span className="btn__label">{children}</span>
     </motion.button>
   );
 }

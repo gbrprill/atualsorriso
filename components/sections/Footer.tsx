@@ -6,7 +6,7 @@ export function Footer() {
   const { legal, links } = siteConfig;
   return (
     <footer className="footer on-dark">
-      <Reveal className="container footer__grid" amount={0.05}>
+      <Reveal className="container footer__grid">
         <div style={{ display: 'grid', gap: 16, alignContent: 'start' }}>
           <span className="logo-ph">[LOGO OFICIAL]</span>
           <p className="t-small">Odontologia e estética em {siteConfig.city}.</p>

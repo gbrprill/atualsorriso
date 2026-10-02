@@ -6,14 +6,18 @@ export type MediaSlot = {
   src: string | null;
   placeholderLabel: string;
   alt: string;
-  aspectRatio: '4/5' | '3/2' | '1/1' | '16/10';
+  aspectRatio: '4/5' | '3/2' | '1/1' | '16/10' | '16/9' | '4/3' | '21/9';
   sourceUrl?: string; // candidato editorial, nunca src automático
+  /** Foto de banco CC0 só para visualizar o layout no protótipo (selo MOCKUP). Nunca usada em produção. */
+  mockup?: { src: string; position?: string };
   editorialState: EditorialState;
 };
 
 export type Service = {
   id: ServiceId;
   name: string;
+  /** Forma curta para CTAs: "Conversar sobre {shortName}". */
+  shortName: string;
   summary: string;
   teamIds: string[];
   sourceUrls: string[];

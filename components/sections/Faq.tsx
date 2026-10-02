@@ -9,14 +9,14 @@ import { IconPlus } from '@/components/ui/Icons';
 export function Faq() {
   const [open, setOpen] = useState<number | null>(0);
   return (
-    <section id="faq" className="section section--surface" aria-labelledby="faq-title">
-      <div className="container">
+    <section id="faq" className="section section--surface" aria-labelledby="faq-title" data-flow>
+      <div className="container" data-flow-inner>
         <SectionHead eyebrow="Perguntas frequentes" title="Dúvidas comuns antes da primeira conversa." titleId="faq-title" />
         <div className="faq">
           {faq.map((f, i) => {
             const isOpen = open === i;
             return (
-              <Reveal key={f.q} kind="left" delay={i * 0.07} amount={0.3}>
+              <Reveal key={f.q} delay={Math.min(i, 3) * 0.05}>
                 <h3 style={{ font: 'inherit' }}>
                   <button
                     type="button"

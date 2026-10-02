@@ -1,30 +1,27 @@
 import type { ReactNode } from 'react';
 import { Reveal } from '@/components/motion/Reveal';
 
+/** Título da seção entra primeiro (eyebrow + título juntos), apoio logo depois. */
 export function SectionHead({
   eyebrow,
   title,
   titleId,
   children,
-  tight,
 }: {
   eyebrow: string;
   title: string;
   titleId: string;
   children?: ReactNode;
-  tight?: boolean;
 }) {
   return (
-    <div className="section-head" style={tight ? { marginBottom: 40 } : undefined}>
-      <Reveal kind="left" duration={0.7}>
+    <div className="section-head">
+      <Reveal>
         <p className="eyebrow">{eyebrow}</p>
-      </Reveal>
-      <Reveal delay={0.08}>
         <h2 id={titleId} className="t-h2">
           {title}
         </h2>
       </Reveal>
-      {children && <Reveal delay={0.16}>{children}</Reveal>}
+      {children && <Reveal delay={0.06}>{children}</Reveal>}
     </div>
   );
 }

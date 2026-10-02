@@ -1,30 +1,39 @@
 import { siteConfig } from '@/data/siteConfig';
-import { IconCalendar, IconPin, IconStar } from '@/components/ui/Icons';
+import { IconArrow, IconCalendar, IconPin, IconStar } from '@/components/ui/Icons';
 import { Reveal } from '@/components/motion/Reveal';
+import { ReviewNote } from '@/components/ui/ReviewNote';
 
 export function Trust() {
-  const { google } = siteConfig;
+  const { google, trajectory, links } = siteConfig;
   return (
-    <section className="trust" aria-label="Confiança local">
-      <div className="container trust__grid">
-        <Reveal className="trust__item" amount={0.3}>
+    <section className="trust" aria-label="Sobre a Atual Sorriso" data-flow>
+      <div className="container trust__grid" data-flow-inner>
+        <Reveal className="trust__item">
           <IconPin />
           <p className="trust__big">Centro de Francisco Beltrão</p>
           <p className="t-small">Av. Julio Assis Cavalheiro, 318</p>
         </Reveal>
-        <Reveal className="trust__item" delay={0.1} amount={0.3}>
+        <Reveal className="trust__item" delay={0.06}>
           <IconCalendar />
-          <p className="trust__big">
-            15 anos de trajetória
+          <p className="trust__big">{trajectory.value} de trajetória</p>
+          <p className="t-small">
+            Odontologia e estética para diferentes momentos do sorriso.
+            <ReviewNote>{trajectory.snapshot}</ReviewNote>
           </p>
-          <p className="t-small">Informação do perfil da clínica no Instagram (2026)</p>
         </Reveal>
-        <Reveal className="trust__item" delay={0.2} amount={0.3}>
+        <Reveal className="trust__item" delay={0.12}>
           <IconStar />
           <p className="trust__big">
             {google.rating} no Google · {google.reviews} avaliações
           </p>
-          <p className="t-small">{google.snapshot}. Os números podem mudar.</p>
+          <p className="t-small">
+            <a className="text-link" href={links.reviews} target="_blank" rel="noopener noreferrer">
+              Ver avaliações
+              <IconArrow className="ico-arrow" />
+              <span className="sr-only"> (abre o Google Maps em nova aba)</span>
+            </a>
+            <ReviewNote>{google.snapshot}</ReviewNote>
+          </p>
         </Reveal>
       </div>
     </section>
