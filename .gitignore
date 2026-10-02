@@ -4,3 +4,5 @@ next-env.d.ts
 *.tsbuildinfo
 dev.log
 .vercel
+
+.vercel
