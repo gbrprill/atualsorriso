@@ -6,7 +6,7 @@ import { ReviewNote } from '@/components/ui/ReviewNote';
 export function Trust() {
   const { google, trajectory, links } = siteConfig;
   return (
-    <section className="trust" aria-label="Sobre a Atual Sorriso" data-flow>
+    <section className="trust" aria-label="Sobre a Atual Sorriso">
       <div className="container trust__grid" data-flow-inner>
         <Reveal className="trust__item">
           <IconPin />
@@ -28,7 +28,7 @@ export function Trust() {
           </p>
           <p className="t-small">
             <a className="text-link" href={links.reviews} target="_blank" rel="noopener noreferrer">
-              Ver avaliações
+              <span className="ghost-text">Ver avaliações</span>
               <IconArrow className="ico-arrow" />
               <span className="sr-only"> (abre o Google Maps em nova aba)</span>
             </a>

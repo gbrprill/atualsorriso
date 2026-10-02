@@ -33,13 +33,17 @@ export function FirstConversation() {
       mm.add('(min-width: 992px) and (min-height: 640px) and (prefers-reduced-motion: no-preference)', () => {
         const items = gsap.utils.toArray<HTMLElement>('.step');
         const fill = root.current!.querySelector('.steps__fill');
+        const railEl = root.current!.querySelector('.steps__rail');
         const cta = root.current!.querySelector('.steps__cta');
         gsap.set([...items, cta], { opacity: 0, y: 24 });
         gsap.set(fill, { scaleX: 0 });
+        gsap.set(railEl, { scaleX: 0, opacity: 0 });
         const tl = gsap.timeline({
           defaults: { ease: 'power3.out' },
           scrollTrigger: { trigger: root.current, start: 'top top', end: '+=150%', pin: true, scrub: 0.6 },
         });
+        // A linha só passa a existir quando a primeira etapa começa a aparecer.
+        tl.to(railEl, { scaleX: 1, opacity: 1, duration: 0.5, ease: 'power2.out' }, 0);
         items.forEach((step, i) => {
           tl.to(fill, { scaleX: (i + 1) / items.length, duration: 0.6, ease: 'power2.inOut' }, i)
             .to(step, { opacity: 1, y: 0, duration: 0.6 }, i + 0.15)

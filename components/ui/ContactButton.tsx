@@ -7,7 +7,7 @@ import { useApp } from '@/components/AppProvider';
 import { IconChat } from './Icons';
 import { pressable } from './pressable';
 
-/** Contorno que se desenha por dentro do botão no hover (e recolhe ao sair). Mede o botão para seguir a borda real. */
+/** Traço branco que percorre a borda uma vez no hover (como no exemplo enviado). Mede o botão para seguir a borda real. */
 function Trace({ target }: { target: RefObject<HTMLElement | null> }) {
   const [box, setBox] = useState({ w: 0, h: 0 });
   useEffect(() => {
@@ -22,7 +22,7 @@ function Trace({ target }: { target: RefObject<HTMLElement | null> }) {
   if (!box.w) return null;
   return (
     <svg className="trace" viewBox={`0 0 ${box.w} ${box.h}`} aria-hidden="true" focusable="false">
-      <rect x="2.5" y="2.5" width={box.w - 5} height={box.h - 5} rx="6" pathLength={100} />
+      <rect x="0.75" y="0.75" width={box.w - 1.5} height={box.h - 1.5} rx="7.25" pathLength={100} />
     </svg>
   );
 }
@@ -40,7 +40,7 @@ export function ContactButton({
   children?: ReactNode;
   serviceId?: ServiceId;
   position: string;
-  variant?: 'primary' | 'secondary' | 'light';
+  variant?: 'primary' | 'secondary' | 'light' | 'glass';
   icon?: boolean;
   /** Contorno animado no hover (usado na hero). */
   trace?: boolean;

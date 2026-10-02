@@ -42,69 +42,74 @@ export function SmoothScroll() {
     let dir = 1;
     // O ímã só responde a um gesto real (roda, teclado, barra de rolagem), nunca à própria animação.
     let gesture = false;
+    let quietUntil = 0;
 
-    const sectionTops = () =>
+    // Ponto de encaixe de cada seção: a BASE da seção alinhada à base da tela.
+    const sectionStops = () =>
       Array.from(document.querySelectorAll<HTMLElement>('[data-flow]'))
         .filter((el) => el.offsetParent !== null)
         .map((el) => {
-          const spacer = el.parentElement?.classList.contains('pin-spacer') ? el.parentElement : el;
-          return Math.round(spacer.getBoundingClientRect().top + window.scrollY);
+          const box = el.parentElement?.classList.contains('pin-spacer') ? el.parentElement : el;
+          return Math.round(box.getBoundingClientRect().bottom + window.scrollY - window.innerHeight);
         });
 
     const magnet = () => {
-      if (snapping || document.querySelector('dialog[open]')) return;
-      const y = window.scrollY;
+      if (snapping || !gesture || document.querySelector('dialog[open]')) return;
+      // Decide pelo destino do gesto (não pela posição atual, que ainda está animando).
+      const y = lenis.targetScroll;
+      const cur = window.scrollY;
+      if (y === undefined) return;
       const vh = window.innerHeight;
       const groups = snapGroups();
-      const ahead = (pts: number[]) =>
-        dir > 0 ? pts.filter((p) => p > y + 2).sort((a, b) => a - b)[0] : pts.filter((p) => p < y - 2).sort((a, b) => b - a)[0];
+      const ahead = (pts: number[], from: number) =>
+        dir > 0 ? pts.filter((p) => p > from + 2).sort((a, b) => a - b)[0] : pts.filter((p) => p < from - 2).sort((a, b) => b - a)[0];
 
       let target: number | undefined;
-      // 1. Dentro de uma seção em etapas: um gesto = uma etapa.
-      const stepped = groups.find((g) => g.stepRange && y > g.stepRange[0] + 2 && y < g.stepRange[1] - 2);
-      if (stepped) target = ahead(stepped.points);
-      // 2. Fora delas: ímã para o próximo ponto na direção do gesto, se estiver perto.
+      // 1. Seção em etapas: um gesto = exatamente uma etapa, a partir de onde a tela está.
+      const stepped = groups.find((g) => g.stepRange && cur >= g.stepRange[0] - 2 && cur < g.stepRange[1] - 2);
+      if (stepped) target = ahead(stepped.points, cur);
+      // 2. Fora delas: ímã para o próximo encaixe na direção do gesto, se estiver perto do destino.
       if (target === undefined) {
-        const pts = [...sectionTops(), ...groups.flatMap((g) => g.points)];
-        const next = ahead(pts);
+        const pts = [...sectionStops(), ...groups.flatMap((g) => g.points)];
+        const next = ahead(pts, cur);
         if (next !== undefined && Math.abs(next - y) < vh * MAGNET) target = next;
       }
       gesture = false;
       if (target === undefined) return;
       snapping = true;
+      // lock: a inércia do trackpad não interrompe o encaixe; depois, uma pausa curta evita pular etapas.
       lenis.scrollTo(target, {
-        duration: Math.min(1.1, 0.55 + Math.abs(target - y) / vh),
+        duration: Math.min(1.1, 0.6 + Math.abs(target - y) / vh / 2),
         easing: easeOutQuart,
+        lock: true,
         onComplete: () => {
           snapping = false;
+          quietUntil = performance.now() + 450;
         },
       });
     };
 
-    const onScroll = (l: Lenis) => {
-      if (l.direction) dir = l.direction;
-      if (snapping || !gesture) return;
+    // O ímã age logo que o gesto termina (sem eventos de roda por IDLE_MS).
+    const arm = (direction: number) => {
+      if (snapping || performance.now() < quietUntil) return;
+      if (direction) dir = direction;
+      gesture = true;
       window.clearTimeout(idle);
       idle = window.setTimeout(magnet, IDLE_MS);
     };
-    lenis.on('scroll', onScroll);
     // Rolagem do usuário durante o ímã cancela o ímã.
-    const cancel = () => {
-      gesture = true;
-      if (snapping) snapping = false;
-    };
+    const onWheel = (e: WheelEvent) => arm(Math.sign(e.deltaY));
     const onKey = (e: KeyboardEvent) => {
-      if (['ArrowDown', 'ArrowUp', 'PageDown', 'PageUp', 'Space', ' ', 'Home', 'End'].includes(e.key)) cancel();
+      if (['ArrowDown', 'PageDown', ' ', 'Space'].includes(e.key)) arm(1);
+      if (['ArrowUp', 'PageUp'].includes(e.key)) arm(-1);
     };
-    window.addEventListener('wheel', cancel, { passive: true });
+    window.addEventListener('wheel', onWheel, { passive: true });
     window.addEventListener('keydown', onKey);
-    window.addEventListener('pointerdown', cancel, { passive: true });
 
     return () => {
       window.clearTimeout(idle);
-      window.removeEventListener('wheel', cancel);
+      window.removeEventListener('wheel', onWheel);
       window.removeEventListener('keydown', onKey);
-      window.removeEventListener('pointerdown', cancel);
       gsap.ticker.remove(tick);
       lenis.destroy();
       setLenis(null);

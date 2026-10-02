@@ -146,7 +146,9 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
 .btn-row { display: flex; flex-wrap: wrap; gap: 12px; }
 
 /* Link de texto com seta (ex.: "Ver avaliações") */
-.text-link { display: inline-flex; align-items: center; gap: 6px; min-height: 44px; font-weight: 600; color: var(--text-heading); text-decoration: underline; text-decoration-color: var(--accent-decorative); text-decoration-thickness: 2px; text-underline-offset: 5px; }
+.text-link { display: inline-flex; align-items: center; gap: 6px; min-height: 44px; font-weight: 600; color: var(--text-heading); text-decoration: none; }
+.text-link:focus-visible .ghost-text::after { transform: scaleX(1); }
+@media (hover: hover) { .text-link:hover .ghost-text::after { transform: scaleX(1); } }
 .text-link svg { width: 16px; height: 16px; transition: transform var(--dur-fast) var(--ease); }
 
 /* Ghost: traço dourado que se redesenha + seta */
@@ -160,8 +162,10 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
 
 /* Contorno que percorre a borda (CTA da hero) */
 .btn--traced { position: relative; }
-/* Contorno completo desenhado por dentro do botão (não vaza da borda); recolhe ao sair. */
-.btn--traced .trace { position: absolute; inset: 0; width: 100%; height: 100%; fill: none; stroke: var(--trace, var(--color-plum-800)); stroke-width: 1.5; stroke-dasharray: 100 100; stroke-dashoffset: 100; transition: stroke-dashoffset 650ms var(--ease); pointer-events: none; }
+/* Botão "glass" (hero e clínica), fiel ao exemplo: borda fina; no hover o fundo acende devagar
+   e um traço branco percorre a borda uma vez. Ao sair, o traço volta pelo mesmo caminho. */
+.btn--glass { background: rgb(255 255 255 / 0.08); color: #fff; border: 1px solid rgb(255 255 255 / 0.6); transition: background-color 1s ease-in-out, border-color 1s ease-in-out; }
+.btn--traced .trace { position: absolute; inset: -1px; width: calc(100% + 2px); height: calc(100% + 2px); overflow: visible; fill: none; stroke: #fff; stroke-width: 1.5; stroke-dasharray: 30 100; stroke-dashoffset: 30; transition: stroke-dashoffset 1s ease-in-out; pointer-events: none; }
 .btn__label { position: relative; }
 
 /* Hover só em dispositivos com ponteiro (nada depende de hover no touch) */
@@ -174,11 +178,12 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
   .btn:hover .ico-chat { transform: rotate(-8deg); }
   .btn:hover .ico-pin { transform: translateY(-2px); }
   .btn--ghost:hover .ghost-text::after { transform: scaleX(1); }
-  .btn--traced:hover .trace { stroke-dashoffset: 0; }
-  .btn--light.btn--traced:hover { background: var(--color-neutral-0); }
+  .btn--traced:hover .trace { stroke-dashoffset: -100; }
+  .btn--glass:hover { background: rgb(255 255 255 / 0.18); border-color: rgb(255 255 255 / 0.3); }
 }
 .btn:focus-visible .ico-arrow, .text-link:focus-visible .ico-arrow { transform: translateX(4px); }
-.btn--traced:focus-visible .trace { stroke-dashoffset: 0; }
+.btn--traced:focus-visible .trace { stroke-dashoffset: -100; }
+.btn--glass:focus-visible { background: rgb(255 255 255 / 0.18); }
 
 /* =========================================================================
    Header
@@ -331,8 +336,10 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
   .stage__sticky { min-height: 100svh; }
 }
 
-/* Transição entre seções: cada seção é opaca e fica acima da anterior (z-index via SectionFlow). */
-:where([data-flow]) { position: relative; background-color: var(--bg-canvas); }
+/* Cada seção cobre a tela inteira; o ímã encaixa a base da seção na base da tela. */
+:where([data-flow]) { position: relative; background-color: var(--bg-canvas); min-height: 100svh; }
+.section[data-flow] { display: flex; flex-direction: column; justify-content: center; padding-top: calc(var(--header-h) + 28px); }
+@media (min-width: 768px) { .section[data-flow] { padding-top: calc(var(--header-h) + 40px); } }
 .footer { position: relative; }
 
 /* =========================================================================
@@ -358,7 +365,8 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
 .services-sec { overflow: hidden; }
 .services-sec__head { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 12px 24px; }
 .services-sec__head .section-head { margin-bottom: 0; }
-.carousel-toggle { min-height: 44px; padding: 0 16px; border-radius: 999px; border: 1.5px solid var(--border-control); background: transparent; color: var(--text-heading); font: 600 14px/20px var(--font-body); cursor: pointer; transition: background-color var(--dur-fast), border-color var(--dur-fast); }
+.carousel-toggle { width: 44px; height: 44px; display: grid; place-items: center; padding: 0; border-radius: 8px; border: 1.5px solid var(--border-control); background: transparent; color: var(--text-heading); cursor: pointer; transition: background-color var(--dur-fast), border-color var(--dur-fast); }
+.carousel-toggle svg { width: 18px; height: 18px; }
 @media (hover: hover) { .carousel-toggle:hover { background: var(--color-rose-50); border-color: var(--color-plum-800); } }
 .marquee { margin-top: 28px; padding: 6px 0 10px; overflow: hidden; -webkit-mask-image: linear-gradient(to right, transparent, #000 4%, #000 96%, transparent); mask-image: linear-gradient(to right, transparent, #000 4%, #000 96%, transparent); }
 .marquee__track { display: flex; gap: 16px; width: max-content; padding-left: var(--content-left); will-change: transform; }
@@ -417,7 +425,7 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
 /* =========================================================================
    Equipe: foto coletiva como fundo + miniaturas
    ========================================================================= */
-.team-sec { position: relative; min-height: 92vh; display: flex; color: #fff; overflow: hidden; background: var(--color-plum-900); }
+.team-sec { position: relative; min-height: 100svh; display: flex; color: #fff; overflow: hidden; background: var(--color-plum-900); }
 .team-sec__bg { position: absolute; inset: 0; }
 .team-sec__bg .media, .team-sec__bg .ph { border-radius: 0; border: 0; }
 .team-sec__shade { position: absolute; inset: 0; pointer-events: none; background: linear-gradient(to top, rgb(62 30 48 / 0.88) 0%, rgb(62 30 48 / 0.35) 38%, rgb(62 30 48 / 0) 60%), linear-gradient(to bottom, rgb(62 30 48 / 0.5), rgb(62 30 48 / 0) 22%); }
@@ -430,12 +438,13 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
 .pill-label span { opacity: 0.75; }
 .pill-label span::after { content: '·'; margin-left: 10px; }
 .team__stage { flex: 1; display: flex; align-items: flex-end; min-height: 220px; }
-.team__card { display: grid; grid-template-columns: 96px 1fr; gap: 16px; align-items: start; width: min(520px, 100%); padding: 16px; border-radius: 16px; background: rgb(255 255 255 / 0.96); color: var(--text-primary); box-shadow: 0 24px 48px -24px rgb(0 0 0 / 0.55); }
+.team__card { display: grid; grid-template-columns: 96px 1fr; gap: 16px; align-items: start; width: min(520px, 100%); padding: 16px; border-radius: 16px; background: rgb(20 10 16 / 0.5); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); border: 1px solid rgb(255 255 255 / 0.14); color: #fff; box-shadow: 0 24px 48px -24px rgb(0 0 0 / 0.55); }
+.team__card .tag { background: rgb(255 255 255 / 0.14); color: #fff; }
 .team__card-photo .media, .team__card-photo .ph { border-radius: 12px; aspect-ratio: 4 / 5 !important; }
 .team__card-body { display: grid; gap: 4px; }
-.team__card h3 { font: 600 19px/26px var(--font-body); color: var(--text-heading); }
-.team__role { font-size: 14px; line-height: 22px; color: var(--text-secondary); }
-.team__bio { font-size: 14px; line-height: 22px; color: var(--text-secondary); }
+.team__card h3 { font: 600 19px/26px var(--font-body); color: #fff; }
+.team__role { font-size: 14px; line-height: 22px; color: rgb(255 255 255 / 0.85); }
+.team__bio { font-size: 14px; line-height: 22px; color: rgb(255 255 255 / 0.72); }
 .team__thumbs { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 8px; }
 .team__thumb { display: grid; justify-items: center; gap: 6px; width: 100%; padding: 6px 2px; border: 0; background: transparent; color: #fff; cursor: pointer; border-radius: 12px; transition: background-color var(--dur-fast); }
 .team__thumb-img { display: block; width: 100%; max-width: 76px; border-radius: 50%; overflow: hidden; box-shadow: 0 0 0 2px rgb(255 255 255 / 0.55); transition: box-shadow var(--dur-base) var(--ease), transform var(--dur-base) var(--ease); }
@@ -454,7 +463,7 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
 /* =========================================================================
    Clínica: imagem cobrindo a seção
    ========================================================================= */
-.clinic-sec { position: relative; min-height: 82vh; display: flex; align-items: flex-end; color: #fff; overflow: hidden; background: var(--color-plum-900); }
+.clinic-sec { position: relative; min-height: 100svh; display: flex; align-items: flex-end; color: #fff; overflow: hidden; background: var(--color-plum-900); }
 .clinic-sec__bg { position: absolute; inset: 0; }
 .clinic-sec__bg .media, .clinic-sec__bg .ph { border-radius: 0; border: 0; }
 .clinic-sec__shade { position: absolute; inset: 0; pointer-events: none; background: linear-gradient(to top, rgb(62 30 48 / 0.9) 0%, rgb(62 30 48 / 0.55) 40%, rgb(62 30 48 / 0) 75%); }
@@ -469,13 +478,14 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
 /* Link de rota: linha da cor do texto + pin, ambos só no hover/foco */
 .route-link { position: relative; display: inline-flex; align-items: center; gap: 8px; min-height: 48px; color: inherit; font-weight: 600; text-decoration: none; }
 .route-link__text { position: relative; }
-.route-link__text::after { content: ''; position: absolute; left: 0; right: 0; bottom: -4px; height: 1.5px; background: currentColor; transform: scaleX(0); transform-origin: left; transition: transform 420ms var(--ease); }
+/* A linha cobre texto + pin */
+.route-link::after { content: ''; position: absolute; left: 0; right: 0; bottom: 8px; height: 1.5px; background: currentColor; transform: scaleX(0); transform-origin: left; transition: transform 420ms var(--ease); }
 .route-link__pin { width: 18px; height: 18px; opacity: 0; transform: translateY(2px); transition: opacity 260ms var(--ease), transform 260ms var(--ease); }
 @media (hover: hover) {
-  .route-link:hover .route-link__text::after { transform: scaleX(1); }
+  .route-link:hover::after { transform: scaleX(1); }
   .route-link:hover .route-link__pin { opacity: 1; transform: none; }
 }
-.route-link:focus-visible .route-link__text::after { transform: scaleX(1); }
+.route-link:focus-visible::after { transform: scaleX(1); }
 .route-link:focus-visible .route-link__pin { opacity: 1; transform: none; }
 @media (hover: none) { .route-link__pin { opacity: 1; transform: none; } }
 
@@ -509,7 +519,7 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
 .step__text { font-size: 15px; line-height: 24px; color: var(--text-secondary); max-width: 34ch; }
 .steps__cta { margin-top: 28px; }
 @media (min-width: 992px) {
-  .steps__rail { display: block; position: relative; height: 2px; background: var(--color-rose-300); margin-bottom: 8px; }
+  .steps__rail { display: block; position: relative; height: 2px; background: var(--color-rose-300); margin-bottom: 8px; transform-origin: left; }
   .steps__fill { position: absolute; inset: 0; background: var(--accent-decorative); transform-origin: left; }
   .steps { grid-template-columns: repeat(3, 1fr); gap: 32px; }
   .step { grid-template-columns: 1fr; gap: 14px; padding-top: 24px; border-top: 0; }

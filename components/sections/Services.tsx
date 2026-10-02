@@ -63,8 +63,24 @@ export function Services() {
       <div className="container services-sec__head">
         <SectionHead eyebrow="Procedimentos" title="Cuidado para diferentes momentos do seu sorriso." titleId="proc-title" />
         {!reduce && (
-          <button type="button" className="carousel-toggle" aria-pressed={paused} onClick={() => setPaused((p) => !p)}>
-            {paused ? 'Retomar carrossel' : 'Pausar carrossel'}
+          <button
+            type="button"
+            className="carousel-toggle"
+            aria-pressed={paused}
+            aria-label={paused ? 'Retomar carrossel' : 'Pausar carrossel'}
+            title={paused ? 'Retomar carrossel' : 'Pausar carrossel'}
+            onClick={() => setPaused((p) => !p)}
+          >
+            {paused ? (
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinejoin="round" aria-hidden="true">
+                <path d="M8 5.5v13l10.5-6.5L8 5.5Z" />
+              </svg>
+            ) : (
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" aria-hidden="true">
+                <rect x="6.5" y="5" width="3.5" height="14" rx="1" />
+                <rect x="14" y="5" width="3.5" height="14" rx="1" />
+              </svg>
+            )}
           </button>
         )}
       </div>

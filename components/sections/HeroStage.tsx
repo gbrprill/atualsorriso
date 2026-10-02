@@ -249,7 +249,7 @@ export function HeroStage() {
               Conheça os cuidados da Atual Sorriso em Francisco Beltrão. Nossa equipe ouve você e orienta os próximos passos.
             </p>
             <div className="stage__actions" data-hero-cta>
-              <ContactButton position="hero" variant="light" trace />
+              <ContactButton position="hero" variant="glass" trace />
               <a className="btn btn--on-dark" href="#procedimentos">
                 Conhecer os procedimentos
                 <IconArrow className="ico-arrow" />

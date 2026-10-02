@@ -86,8 +86,10 @@ export function Results() {
         tl.addLabel('big')
           .to(first, { width: CARD, duration: 1, ease: 'power3.inOut' }, 0)
           .to(track, { x: centerX, duration: 1, ease: 'power3.inOut' }, 0)
-          .addLabel('centered', 1);
-        rest.forEach((card, i) => tl.to(card, { opacity: 1, x: 0, duration: 0.45, ease: 'power2.out' }, 1.1 + i * 0.2));
+          ;
+        rest.forEach((card, i) => tl.to(card, { opacity: 1, x: 0, duration: 0.45, ease: 'power2.out' }, 0.85 + i * 0.2));
+        // Um gesto: card grande → tamanho normal no centro, já com os próximos aparecendo à direita.
+        tl.addLabel('centered', 1.5);
         tl.to(track, { x: endX, duration: travel, ease: 'power1.inOut' }, 1.3).addLabel('end');
         st.current = tl.scrollTrigger ?? null;
 

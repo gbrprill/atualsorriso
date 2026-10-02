@@ -33,7 +33,7 @@ export function Clinic() {
           <p className="clinic-sec__lead">Veja o ambiente onde a equipe recebe você.</p>
           <p className="clinic-sec__text">{siteConfig.institutionalText}</p>
           <div className="clinic-sec__actions">
-            <ContactButton position="clinic" variant="light" trace />
+            <ContactButton position="clinic" variant="glass" trace />
             <RouteLink position="clinic" />
           </div>
         </Reveal>
